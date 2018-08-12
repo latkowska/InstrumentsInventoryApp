@@ -1,0 +1,26 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="product_name_padding">10dp</dimen>
+
+    <!--Style of FAB button in activity catalog-->
+    <dimen name="fab_layout_margin">16dp</dimen>
+
+    <!--Catalog activity main Linear layout dimens-->
+    <dimen name="cat_activ_lin_lay_main">5dp</dimen>
+
+    <!--Catalog activity Text Views dimens-->
+    <dimen name="textViewmargin">5dp</dimen>
+
+    <!--Catalog activity Text Views dimens-->
+    <dimen name="HeaderPadding">15dp</dimen>
+
+    <!-- Editor Activity first LL-->
+    <dimen name="paddingFLL">10dp</dimen>
+
+    <!--Editor Activity Descriptive Text Views-->
+    <dimen name="paddingTV">15dp</dimen>
+
+    <!--Order button dimens-->
+    <dimen name="buttonMarginTop">40dp</dimen>
+    <dimen name="buttonPadding">10dp</dimen>
+</resources>

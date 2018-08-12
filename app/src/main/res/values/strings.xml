@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">InstrumentsInventoryApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_insert_dummy_instrument">Insert test instrument</string>
+    <string name="title_activity_delete_all">Delete all instruments</string>
+
+    <!--Hints for edit text fields-->
+    <string name="hint_product_name">Name of the product...</string>
+    <string name="hint_price">Product\'s price...</string>
+    <string name="hint_quantity">Quantity</string>
+    <string name="hint_country_of_origin">Product\'s country of origin...</string>
+    <string name="hint_supplier_name">Supplier name...</string>
+    <string name="hint_supplier_phone_number">Supplier phone number...</string>
+
+    <!--Hints for empty state text fields-->
+    <string name="emty_header">Wandering how to populate fields?</string>
+    <string name="empty_product_name">Name of the product: text, required</string>
+    <string name="empty_price">Product\'s price: number</string>
+    <string name="empty_quantity">Quantity of products: number</string>
+    <string name="empty_country_of_origin">Product\'s country of origin: text, required</string>
+    <string name="empty_supplier_name">Supplier name: text, required</string>
+    <string name="empty_supplier_phone_number">Supplier phone number: numbers, required</string>
+
+    <!-- Order button-->
+    <string name="orderButton">Order from supplier</string>
+
+    <!--Editor Activity-->
+    <!-- Title for the activity to add a new instrument -->
+    <string name="editor_activity_title_new_instrument">Add an instrument</string>
+
+    <!-- Title for the activity to edit an existing instrument -->
+    <string name="editor_activity_title_edit_instrument">Edit instrument</string>
+
+    <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
+    <string name="action_delete">Delete</string>
+
+
+</resources>

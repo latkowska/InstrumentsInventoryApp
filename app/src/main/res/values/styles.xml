@@ -1,0 +1,77 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorBlack</item>
+        <item name="colorPrimaryDark">@color/colorBlack</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--Style of FAB button in activity catalog-->
+    <style name="FAB">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_margin">@dimen/fab_layout_margin</item>
+    </style>
+
+    <!--Catalog activity text views style-->
+    <style name="TextViewStyle">
+        <item name="android:layout_margin">@dimen/textViewmargin</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <!--Catalog activity header text view style-->
+    <style name="HeaderTextStyle">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/HeaderPadding</item>
+    </style>
+
+    <!--Editor activity style-->
+    <!--Main Linera layout-->
+    <style name="EditorActivitFirstLinLay">
+        <item name="android:padding">@dimen/paddingFLL</item>
+    </style>
+
+    <!--Product's descriptive TextViews-->
+    <style name="descriptiveTV">
+        <item name="android:textColor">@color/colorBlue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">@dimen/paddingTV</item>
+    </style>
+
+    <!--Editor Activity Edit Text fields-->
+    <style name="EditTextStyle">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--Editor Activity Order Button style-->
+    <style name="OrderButton">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/buttonMarginTop</item>
+        <item name="android:background">@color/colorLightBlue</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!-- Theme of the editor -->
+    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorBlack</item>
+        <item name="colorPrimaryDark">@color/colorBlack</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+</resources>
