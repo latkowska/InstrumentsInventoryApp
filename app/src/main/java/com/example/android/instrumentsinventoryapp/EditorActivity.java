@@ -1,10 +1,17 @@
 package com.example.android.instrumentsinventoryapp;
 
 import android.content.ContentValues;
+
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,12 +20,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.content.ContentUris;
-import android.widget.AdapterView;
 
 import com.example.android.instrumentsinventoryapp.data.InstrumentsContract;
 
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private EditText mNameEditText;
     private EditText mPriceEditText;
@@ -29,8 +34,8 @@ public class EditorActivity extends AppCompatActivity {
     private Button mIncrementBtn;
     private Button mDecrementBtn;
     private int item_quantity = 0;
-    private static final int LOADER_MANAGER_ID = 0;
-    private Uri currentInstrumentUri;
+    private static final int EXISTING_INSTRUMENT_LOADER = 0;
+    private Uri mCurrentInstrumentUri;
     private boolean mProductHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -51,15 +56,18 @@ public class EditorActivity extends AppCompatActivity {
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new pet or editing an existing one.
         Intent intent = getIntent();
-        Uri currentInstrumentUri = intent.getData();
+        mCurrentInstrumentUri = intent.getData();
         // If the intent DOES NOT contain a pet content URI, then we know that we are
         // creating a new pet.
-        if (currentInstrumentUri == null) {
+        if (mCurrentInstrumentUri == null) {
             // This is a new pet, so change the app bar to say "Add a Pet"
             setTitle(getString(R.string.editor_activity_title_new_instrument));
         } else {
             // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
             setTitle(getString(R.string.editor_activity_title_edit_instrument));
+            // Initialize a loader to read the pet data from the database
+            // and display the current values in the editor
+            getLoaderManager().initLoader(EXISTING_INSTRUMENT_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Object>) this);
         }
 
 
@@ -107,7 +115,7 @@ public class EditorActivity extends AppCompatActivity {
         if (newUri == null) {
             Toast.makeText(this, "Insert instrument failed", Toast.LENGTH_LONG).show(); //R.string.....
         } else {
-            Toast.makeText(this, "Instrument succesfully added.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Instrument successfully added.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -142,6 +150,75 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Since the editor shows all pet attributes, define a projection that contains
+        // all columns from the pet table
+        String[] projection = {
+                InstrumentsContract.MusicalInstrumentsEntry._ID,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME,
+                InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER};
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                mCurrentInstrumentUri,         // Query the content URI for the current pet
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        // Bail early if the cursor is null or there is less than 1 row in the cursor
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+        // Proceed with moving to the first row of the cursor and reading data from it
+        // (This should be the only row in the cursor)
+        if (cursor.moveToFirst()) {
+            // Find the columns of pet attributes that we're interested in
+            int nameColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
+            int priceColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE);
+            int quantityColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY);
+            int countryOfOriginColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN);
+            int suppierNameColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME);
+            int supplierPhoneColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER);
+            // Extract out the value from the Cursor for the given column index
+            String name = cursor.getString(nameColumnIndex);
+            int price = cursor.getInt(priceColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            String countryOfOrigin = cursor.getString(countryOfOriginColumnIndex);
+            String supplierName = cursor.getString(suppierNameColumnIndex);
+            String supplierPhone = cursor.getString(supplierPhoneColumnIndex);
+            // Update the views on the screen with the values from the database
+            mNameEditText.setText(name);
+            mPriceEditText.setText(Integer.toString(price));
+            mQuantitytEditText.setText(Integer.toString(quantity));
+            mCountryOfOrigintEditText.setText(countryOfOrigin);
+            mSupllierNameEditText.setText(supplierName);
+            mSupplierPhoneEditText.setText(supplierPhone);
+
+        }
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // If the loader is invalidated, clear out all the data from the input fields.
+        mNameEditText.setText("");
+        mPriceEditText.setText("");
+        mQuantitytEditText.setText("");
+        mCountryOfOrigintEditText.setText("");
+        mSupllierNameEditText.setText("");
+        mSupplierPhoneEditText.setText("");
     }
 }
 
