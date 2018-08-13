@@ -51,7 +51,7 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         instrumentQuantityTV.setText(Integer.toString(instrumentQuantity));
 
         //To IMPROVE!!!!
-        final Instrument objectInstrument = new Instrument(_id, instrumentQuantity);
+        Instrument objectInstrument = new Instrument(_id, instrumentQuantity);
         saleButtonTV.setTag(objectInstrument);
 
         saleButtonTV.setOnClickListener(new View.OnClickListener() {
@@ -59,13 +59,13 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
 
                 Instrument object = (Instrument) v.getTag();
-                String klick = InstrumentsContract.MusicalInstrumentsEntry._ID + "= ?";
+                String selection = InstrumentsContract.MusicalInstrumentsEntry._ID + "= ?";
                 String[] selectionArgs = {Integer.toString(object.getmInstrumentId())};
-                Uri updateURI = Uri.withAppendedPath(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, Integer.toString(objectInstrument.getmInstrumentId()));
-                if (object.getmInstrumentId() > 0) {
+                Uri updateURI = Uri.withAppendedPath(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, Integer.toString(object.getmInstrumentId()));
+                if (object.getmInstrumentQuantity() > 0) {
                     ContentValues values = new ContentValues();
                     values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY, object.getmInstrumentQuantity() - 1);
-                    int sum = context.getContentResolver().update(updateURI, values, klick, selectionArgs);
+                    context.getContentResolver().update(updateURI, values, selection, selectionArgs);
                 }
             }
         });
