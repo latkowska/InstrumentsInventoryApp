@@ -21,8 +21,7 @@ public final class InstrumentsContract {
 
         public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-        public static final String INSTRUMENT_PATH = "musical_instruments"; //store.db
-
+        public static final String INSTRUMENT_PATH = "musical_instruments";
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, INSTRUMENT_PATH);
 

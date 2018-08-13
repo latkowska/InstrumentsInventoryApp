@@ -37,7 +37,6 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         ImageButton saleButtonTV = (ImageButton) view.findViewById(R.id.list_item_sale_button);
 
         //Find the column index which we are interested in name price quantity
-
         int nameColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY);
@@ -51,8 +50,7 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         instrumentPriceTV.setText(Integer.toString(instrumentPrice));
         instrumentQuantityTV.setText(Integer.toString(instrumentQuantity));
 
-
-        //tu poprawic!!!!!
+        //To IMPROVE!!!!
         final Instrument objectInstrument = new Instrument(_id, instrumentQuantity);
         saleButtonTV.setTag(objectInstrument);
 

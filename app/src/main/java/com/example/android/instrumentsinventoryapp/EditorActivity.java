@@ -1,6 +1,7 @@
 package com.example.android.instrumentsinventoryapp;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.content.ContentUris;
+import android.widget.AdapterView;
 
 import com.example.android.instrumentsinventoryapp.data.InstrumentsContract;
 
@@ -27,7 +30,7 @@ public class EditorActivity extends AppCompatActivity {
     private Button mDecrementBtn;
     private int item_quantity = 0;
     private static final int LOADER_MANAGER_ID = 0;
-    private Uri mCurrentInstrumentUri;
+    private Uri currentInstrumentUri;
     private boolean mProductHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -44,6 +47,20 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        // Examine the intent that was used to launch this activity,
+        // in order to figure out if we're creating a new pet or editing an existing one.
+        Intent intent = getIntent();
+        Uri currentInstrumentUri = intent.getData();
+        // If the intent DOES NOT contain a pet content URI, then we know that we are
+        // creating a new pet.
+        if (currentInstrumentUri == null) {
+            // This is a new pet, so change the app bar to say "Add a Pet"
+            setTitle(getString(R.string.editor_activity_title_new_instrument));
+        } else {
+            // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
+            setTitle(getString(R.string.editor_activity_title_edit_instrument));
+        }
 
 
         // Find all relevant views that we will need to read user input from
@@ -83,12 +100,12 @@ public class EditorActivity extends AppCompatActivity {
         values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER, supplierPhoneString);
 
         // Insert a new instrument into the provider, returning the content URI for the new instrument.
-        Uri newUri = getContentResolver().insert(InstrumentsContract.MusicalInstrumentsEntry.BASE_CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, values);
 
         //show a toas message
         //if succesful
         if (newUri == null) {
-            Toast.makeText(this, "Inzert instrument failed", Toast.LENGTH_LONG).show(); //R.string.....
+            Toast.makeText(this, "Insert instrument failed", Toast.LENGTH_LONG).show(); //R.string.....
         } else {
             Toast.makeText(this, "Instrument succesfully added.", Toast.LENGTH_LONG).show();
         }

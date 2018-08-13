@@ -1,6 +1,7 @@
 package com.example.android.instrumentsinventoryapp;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -58,9 +60,20 @@ public class CatalogActivity extends AppCompatActivity implements
         View emptyView = findViewById(R.id.empty_list);
         instrumentListView.setEmptyView(emptyView);
 
-
         mInstrumentCursorAdapter = new InstrumentsCursorAdapter(this, null);
         instrumentListView.setAdapter(mInstrumentCursorAdapter);
+
+        // Setup the item click listener
+        instrumentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+            Uri currentInstrumentUri = ContentUris.withAppendedId(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, id);
+            intent.setData(currentInstrumentUri);
+            startActivity(intent);
+            }
+
+        });
 
         // Kick off the loader
         getLoaderManager().initLoader(INSTRUMENT_LOADER, null, this);

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InstrumentsInventoryApp</string>
+    <string name="app_name">Instruments Inventory App</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_insert_dummy_instrument">Insert test instrument</string>
     <string name="title_activity_delete_all">Delete all instruments</string>
@@ -36,6 +36,7 @@
 
     <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
+
 
 
 </resources>
