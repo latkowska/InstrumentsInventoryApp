@@ -37,6 +37,14 @@
     <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
+    <string name="editor_insert_instrument_failed">Insert Instrument failed.</string>
+
+    <string name="editor_insert_instrument_successful">Instrument inserted successfully.</string>
+
+    <string name="editor_update_instrument_failed">Instrument update failed.</string>
+
+    <string name="editor_update_instrument_successful">Instrument updatet successfully.</string>
+
 
 
 </resources>
