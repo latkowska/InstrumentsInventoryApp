@@ -1,5 +1,6 @@
 package com.example.android.instrumentsinventoryapp;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 
 import android.content.DialogInterface;
@@ -20,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,11 +37,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mCountryOfOrigintEditText;
     private EditText mSupllierNameEditText;
     private EditText mSupplierPhoneEditText;
-    private Button mIncrementBtn;
-    private Button mDecrementBtn;
-    private int item_quantity = 0;
+    private Button mIncrementButton;
+    private Button mDecrementButton;
     private static final int EXISTING_INSTRUMENT_LOADER = 0;
     private Uri mCurrentInstrumentUri;
+    private int instrumentQuantity = 0;
 
     private boolean mInstrumenttHasChanged = false;
     /**
@@ -53,6 +56,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +87,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_price);
         mQuantitytEditText = (EditText) findViewById(R.id.edit_quantity);
-        mIncrementBtn = (Button) findViewById(R.id.increment_quantity);
-        mDecrementBtn = (Button) findViewById(R.id.decrement_quantity);
+        mIncrementButton = (Button) findViewById(R.id.increment_quantity);
+        mDecrementButton = (Button) findViewById(R.id.decrement_quantity);
         mCountryOfOrigintEditText = (EditText) findViewById(R.id.edit_country_of_origin);
         mSupllierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhoneEditText = (EditText) findViewById(R.id.edit_supplier_phone_number);
@@ -98,6 +102,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCountryOfOrigintEditText.setOnTouchListener(mTouchListener);
         mSupllierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
+        mIncrementButton.setOnTouchListener(mTouchListener);
+        mDecrementButton.setOnTouchListener((OnTouchListener) mDecrementButton);
+    }
+
+    private void actionIncrementButton(View view) {
+        instrumentQuantity = Integer.parseInt(mQuantitytEditText.getText().toString());
+        instrumentQuantity = instrumentQuantity + 1;
+        mQuantitytEditText.setText(Integer.toString(instrumentQuantity));
+    }
+
+    private void actionDecrementButton(View view) {
+        instrumentQuantity = Integer.parseInt(mQuantitytEditText.getText().toString());
+        if(instrumentQuantity > 0) {
+        instrumentQuantity = instrumentQuantity - 1;}
+        mQuantitytEditText.setText(Integer.toString(instrumentQuantity));
     }
 
 

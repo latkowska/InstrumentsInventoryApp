@@ -50,7 +50,7 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         instrumentPriceTV.setText(Integer.toString(instrumentPrice));
         instrumentQuantityTV.setText(Integer.toString(instrumentQuantity));
 
-        //To IMPROVE!!!!
+        //Sale button
         Instrument objectInstrument = new Instrument(_id, instrumentQuantity);
         saleButtonTV.setTag(objectInstrument);
 
