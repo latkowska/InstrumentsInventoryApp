@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.net.URI;
+
 public class InstrumentsProvider extends ContentProvider {
 
     /**
@@ -22,19 +24,13 @@ public class InstrumentsProvider extends ContentProvider {
     public static final int INSTRUMENTS = 100;
     public static final int INSTRUMENT_ID = 101;
 
-    /**
-     * UriMatcher object to match a content URI to a corresponding code.
-     * The input passed into the constructor represents the code to return for the root URI.
-     * It's common to use NO_MATCH as the input for this case.
-     */
+    //UriMatcher object to match a content URI to a corresponding code.
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-
         uriMatcher.addURI(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_AUTHORITY, "musical_instruments", 100);
         uriMatcher.addURI(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_AUTHORITY, "musical_instruments/#", 101);
-
     }
 
     private InstrumentsDbHelper mInstrumentDBHelper;
@@ -67,11 +63,8 @@ public class InstrumentsProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Query URI Error" + uri);
         }
-        // Set notification URI on the Cursor,
-        // so we know what content URI the Cursor was created for.
-        // If the data at this URI changes, then we know we need to update the Cursor.
+        // Set notification URI on the Cursor. If it changes Cursor update is required.
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        // Return the cursor
         return cursor;
     }
 
@@ -100,51 +93,41 @@ public class InstrumentsProvider extends ContentProvider {
         }
     }
 
-    /**
-     * Insert a pet into the database with the given content values. Return the new content URI
-     * for that specific row in the database.
-     */
     private Uri insertInstrument(Uri uri, ContentValues values) {
-        // Check that the name is not null
         String instrumentName = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
         if (instrumentName == null || instrumentName.trim().length() == 0) {
-            throw new IllegalArgumentException("Instrument requires a name");
+            throw new IllegalArgumentException("Instrument name required.");
         }
 
-        // If the price is provided, check that it's greater than or equal to 0 $
         Integer instrumentPrice = values.getAsInteger(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE);
         if (instrumentPrice == null || instrumentPrice < 0) {
-            throw new IllegalArgumentException("Instrument requires valid price");
+            throw new IllegalArgumentException("Instrument price required.");
 
         }
-        // If the price is provided, check that it's greater than or equal to 0 $
         Integer instrumentQuantity = values.getAsInteger(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY);
         if (instrumentQuantity == null || instrumentQuantity < 0) {
-            throw new IllegalArgumentException("Instruments quantity must be greater than 0.");
+            throw new IllegalArgumentException("Instruments quantity at least 0.");
 
         }
 
-        // Check that the name is not null
         String instrumentCountryOfOrigin = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN);
         if (instrumentCountryOfOrigin == null || instrumentCountryOfOrigin.trim().length() == 0) {
-            throw new IllegalArgumentException("Instrument requires country of Origin");
+            throw new IllegalArgumentException("Instrument requires country of origin.");
         }
 
-        // Check that the name is not null
         String supplierName = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME);
         if (supplierName == null || supplierName.trim().length() == 0) {
-            throw new IllegalArgumentException("Supplier name required");
+            throw new IllegalArgumentException("Supplier name required.");
         }
 
-        // Check that the name is not null
         String supplierPhone = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER);
         if (supplierPhone == null || supplierPhone.trim().length() == 0) {
-            throw new IllegalArgumentException("Supplier phone number required");
+            throw new IllegalArgumentException("Supplier phone number required.");
         }
 
-        // Get writeable database
+        // Get writable database
         SQLiteDatabase database = mInstrumentDBHelper.getWritableDatabase();
-        // Insert the new pet with the given values
+        // Insert the new instrument with the given values.
         long id = database.insert(InstrumentsContract.MusicalInstrumentsEntry.TABLE_NAME, null, values);
         // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1) {
@@ -152,7 +135,7 @@ public class InstrumentsProvider extends ContentProvider {
             return null;
         }
 
-        //notify listeners that content uri has been updated
+        //Notify listeners that content uri has been updated.
         getContext().getContentResolver().notifyChange(uri, null);
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
@@ -160,7 +143,7 @@ public class InstrumentsProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Get writeable database
+        // Get writable database
         SQLiteDatabase database = mInstrumentDBHelper.getWritableDatabase();
         // Track the number of rows that were deleted
         int rowsDeleted;
@@ -195,9 +178,6 @@ public class InstrumentsProvider extends ContentProvider {
             case INSTRUMENTS:
                 return updateInstrument(uri, contentValues, selection, selectionArgs);
             case INSTRUMENT_ID:
-                // For the PET_ID code, extract out the ID from the URI,
-                // so we know which row to update. Selection will be "_id=?" and selection
-                // arguments will be a String array containing the actual ID.
                 selection = InstrumentsContract.MusicalInstrumentsEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateInstrument(uri, contentValues, selection, selectionArgs);
@@ -206,48 +186,43 @@ public class InstrumentsProvider extends ContentProvider {
         }
     }
 
-    /**
-     * Update pets in the database with the given content values. Apply the changes to the rows
-     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
-     * Return the number of rows that were successfully updated.
-     */
     private int updateInstrument(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME)) {
             String instrumentName = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
             if (instrumentName == null || instrumentName.trim().length() == 0) {
-                throw new IllegalArgumentException("Update - instrument requires a name");
+                throw new IllegalArgumentException("Update - instrument requires name.");
             }
         }
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE)) {
             Integer instrumentPrice = values.getAsInteger(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE);
             if (instrumentPrice == null || instrumentPrice < 0) {
-                throw new IllegalArgumentException("Update - instrument requires valid price");
+                throw new IllegalArgumentException("Update - instrument requires valid price.");
 
             }
         }
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY)) {
             Integer instrumentQuantity = values.getAsInteger(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY);
             if (instrumentQuantity == null || instrumentQuantity < 0) {
-                throw new IllegalArgumentException("Update - instruments quantity must be greater than 0.");
+                throw new IllegalArgumentException("Update - instruments quantity at least 0.");
 
             }
         }
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN)) {
             String instrumentCountryOfOrigin = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN);
             if (instrumentCountryOfOrigin == null || instrumentCountryOfOrigin.trim().length() == 0) {
-                throw new IllegalArgumentException("Update - instrument requires country of Origin");
+                throw new IllegalArgumentException("Update - instrument requires country of origin.");
             }
         }
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME)) {
             String supplierName = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME);
             if (supplierName == null || supplierName.trim().length() == 0) {
-                throw new IllegalArgumentException("Update - sSupplier name required");
+                throw new IllegalArgumentException("Update - ssupplier name required.");
             }
         }
         if (values.containsKey(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER)) {
             String supplierPhone = values.getAsString(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER);
             if (supplierPhone == null || supplierPhone.trim().length() == 0) {
-                throw new IllegalArgumentException("Update - supplier phone number required");
+                throw new IllegalArgumentException("Update - supplier phone number required.");
             }
         }
         // If there are no values to update, then don't try to update the database
@@ -255,17 +230,11 @@ public class InstrumentsProvider extends ContentProvider {
             return 0;
         }
 
-        // Otherwise, get writeable database to update the data
         SQLiteDatabase database = mInstrumentDBHelper.getWritableDatabase();
-        // Returns the number of database rows affected by the update statement
-        // Perform the update on the database and get the number of rows affected
         int rowsUpdated = database.update(InstrumentsContract.MusicalInstrumentsEntry.TABLE_NAME, values, selection, selectionArgs);
-        // If 1 or more rows were updated, then notify all listeners that the data at the
-        // given URI has changed
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-        // Return the number of rows updated
         return rowsUpdated;
     }
 }

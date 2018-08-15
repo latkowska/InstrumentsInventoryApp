@@ -27,16 +27,8 @@ import com.example.android.instrumentsinventoryapp.data.InstrumentsCursorAdapter
 public class CatalogActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /**
-     * Identifier for the pet data loader
-     */
     private static final int INSTRUMENT_LOADER = 0;
-
-    /**
-     * Adapter for the ListView
-     */
     InstrumentsCursorAdapter mInstrumentCursorAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +46,24 @@ public class CatalogActivity extends AppCompatActivity implements
             }
         });
 
-        // Find the ListView which will be populated with the instrument data
+        // Find the ListView which will be populated with the instrument data.
         ListView instrumentListView = (ListView) findViewById(R.id.list);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_list);
         instrumentListView.setEmptyView(emptyView);
 
+        //Set Instruments Adapter.
         mInstrumentCursorAdapter = new InstrumentsCursorAdapter(this, null);
         instrumentListView.setAdapter(mInstrumentCursorAdapter);
 
-        // Setup the item click listener
+        // Setup the item click listener.
         instrumentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-            Uri currentInstrumentUri = ContentUris.withAppendedId(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, id);
-            intent.setData(currentInstrumentUri);
-            startActivity(intent);
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                Uri currentInstrumentUri = ContentUris.withAppendedId(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, id);
+                intent.setData(currentInstrumentUri);
+                startActivity(intent);
             }
 
         });
@@ -79,7 +72,7 @@ public class CatalogActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(INSTRUMENT_LOADER, null, this);
 
     }
-
+/**
     //temporatry method to insert dummy data
     private void insertInstrumentData() {
 
@@ -94,8 +87,8 @@ public class CatalogActivity extends AppCompatActivity implements
 
         Uri newUri = getContentResolver().insert(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, values);
     }
-
-
+*/
+/**
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
@@ -112,14 +105,10 @@ public class CatalogActivity extends AppCompatActivity implements
             case R.id.action_insert_dummy_data:
                 insertInstrumentData();
                 return true;
-            // Respond to a click on the "Delete all entries" menu option
-            case R.id.action_delete_all:
-                // Do nothing for now
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
+*/
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Define a projection that specifies the columns from the table we care about.
@@ -140,14 +129,12 @@ public class CatalogActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update {@link PetCursorAdapter} with this new cursor containing updated pet data
         mInstrumentCursorAdapter.swapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-// Callback called when the data needs to be deleted
         mInstrumentCursorAdapter.swapCursor(null);
     }
 }

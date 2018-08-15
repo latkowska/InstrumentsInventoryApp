@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBlack</item>
         <item name="colorPrimaryDark">@color/colorBlack</item>
-        <item name="colorAccent">@color/colorBlue</item>
+        <item name="colorAccent">@color/colorYellow</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,6 +16,13 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Theme of the editor -->
+    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorBlack</item>
+        <item name="colorPrimaryDark">@color/colorBlack</item>
+        <item name="colorAccent">@color/colorYellow</item>
+    </style>
 
     <!--Style of FAB button in activity catalog-->
     <style name="FAB">
@@ -49,29 +56,50 @@
 
     <!--Product's descriptive TextViews-->
     <style name="descriptiveTV">
-        <item name="android:textColor">@color/colorBlue</item>
+        <item name="android:textColor">@color/colorYellow</item>
         <item name="android:textSize">14sp</item>
         <item name="android:padding">@dimen/paddingTV</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
-    <!--Editor Activity Edit Text fields-->
+    <!--Edit Text fields-->
     <style name="EditTextStyle">
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!--Editor Activity Order Button style-->
+    <!--Order Button style-->
     <style name="OrderButton">
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginTop">@dimen/buttonMarginTop</item>
-        <item name="android:background">@color/colorLightBlue</item>
+        <item name="android:background">@color/colorLightGrey</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:padding">16dp</item>
     </style>
 
-    <!-- Theme of the editor -->
-    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorBlack</item>
-        <item name="colorPrimaryDark">@color/colorBlack</item>
-        <item name="colorAccent">@color/colorWhite</item>
+    <!--List item-->
+    <!--Product name TextViev-->
+    <style name="ItemListProductNameStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textColor">@color/colorYellow</item>
+        <item name="android:padding">@dimen/product_name_padding</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--Price and Quantity TextView-->
+    <style name="ProductPriceAndQuantityStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/colorMediumGrey</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">@dimen/product_price_padding</item>
+    </style>
+
+    <!-- Sale button style-->
+    <style name="SaleButtonStyle">
+        <item name="android:padding">@dimen/sale_btn_padding</item>
+        <item name="android:layout_marginRight">@dimen/sale_btn_margin_right</item>
+        <item name="android:layout_marginTop">@dimen/sale_btn_margin_top</item>
     </style>
 </resources>

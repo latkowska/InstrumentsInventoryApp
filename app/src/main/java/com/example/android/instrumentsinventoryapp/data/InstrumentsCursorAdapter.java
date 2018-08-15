@@ -20,11 +20,10 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
     }
 
     /**
-     * Makes a new blank list item view. No data is set (or bound) to the views yet.
+     * Makes a new blank list item view.
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Inflate a list item view using the layout specified in list_item.xml
         return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
@@ -36,7 +35,7 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         TextView instrumentQuantityTV = (TextView) view.findViewById(R.id.list_item_quantity);
         ImageButton saleButtonTV = (ImageButton) view.findViewById(R.id.list_item_sale_button);
 
-        //Find the column index which we are interested in name price quantity
+        //Find the columns indexes in which we are interested in (name, price, quantity,).
         int nameColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY);
@@ -50,7 +49,7 @@ public class InstrumentsCursorAdapter extends CursorAdapter {
         instrumentPriceTV.setText(Integer.toString(instrumentPrice));
         instrumentQuantityTV.setText(Integer.toString(instrumentQuantity));
 
-        //Sale button
+        //Sale button. It decrements product's quantity by 1.
         Instrument objectInstrument = new Instrument(_id, instrumentQuantity);
         saleButtonTV.setTag(objectInstrument);
 

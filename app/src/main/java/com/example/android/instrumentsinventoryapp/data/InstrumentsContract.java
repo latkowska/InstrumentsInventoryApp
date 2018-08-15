@@ -8,13 +8,14 @@ import android.provider.BaseColumns;
  * API Contract for the Musical Instruments Inventory app.
  */
 
-//outer class
+//Outer class
 public final class InstrumentsContract {
 
+    //Empty constructor
     private InstrumentsContract() {
     }
 
-    //inner class
+    //Inner class
     public static final class MusicalInstrumentsEntry implements BaseColumns {
 
         public static final String CONTENT_AUTHORITY = "com.example.android.instrumentsinventoryapp";

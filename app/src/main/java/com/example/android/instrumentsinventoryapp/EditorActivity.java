@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
@@ -21,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,10 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private int instrumentQuantity = 0;
 
     private boolean mInstrumenttHasChanged = false;
-    /**
-     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
-     * the view, and we change the mPetHasChanged boolean to true.
-     */
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -63,27 +58,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         setContentView(R.layout.activity_editor);
 
         // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new pet or editing an existing one.
+        // in order to figure out if we're creating a new instrument or editing an existing one.
         Intent intent = getIntent();
         mCurrentInstrumentUri = intent.getData();
-        // If the intent DOES NOT contain a pet content URI, then we know that we are
-        // creating a new pet.
+        // If the intent DOES NOT contain a instrument content URI, then we know that we are
+        // creating a new instrument.
         if (mCurrentInstrumentUri == null) {
-            // This is a new pet, so change the app bar to say "Add a Pet"
+            // This is a new instrument - change the app bar
             setTitle(getString(R.string.editor_activity_title_new_instrument));
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
-            // (It doesn't make sense to delete a pet that hasn't been created yet.)
             invalidateOptionsMenu();
         } else {
-            // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
+            // Otherwise this is an existing instrument - change app bar
             setTitle(getString(R.string.editor_activity_title_edit_instrument));
-            // Initialize a loader to read the pet data from the database
+            // Initialize a loader to read the instrument data from the database
             // and display the current values in the editor
             getSupportLoaderManager().initLoader(EXISTING_INSTRUMENT_LOADER, null, this);
         }
 
 
-        // Find all relevant views that we will need to read user input from
+        // Find all relevant views that we will need to read user input from.
         mNameEditText = (EditText) findViewById(R.id.edit_product_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_price);
         mQuantitytEditText = (EditText) findViewById(R.id.edit_quantity);
@@ -93,73 +87,65 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupllierNameEditText = (EditText) findViewById(R.id.edit_supplier_name);
         mSupplierPhoneEditText = (EditText) findViewById(R.id.edit_supplier_phone_number);
 
-        // Setup OnTouchListeners on all the input fields, so we can determine if the user
-        // has touched or modified them. This will let us know if there are unsaved changes
-        // or not, if the user tries to leave the editor without saving.
+        // Setup OnTouchListeners on all the input fields and onClickListener for buttons.
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantitytEditText.setOnTouchListener(mTouchListener);
         mCountryOfOrigintEditText.setOnTouchListener(mTouchListener);
         mSupllierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
-        mIncrementButton.setOnTouchListener(mTouchListener);
-        mDecrementButton.setOnTouchListener((OnTouchListener) mDecrementButton);
+        mIncrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionIncrementButton();
+            }
+        });
+        mDecrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionDecrementButton();
+            }
+        });
     }
 
-    private void actionIncrementButton(View view) {
+    public void actionIncrementButton() {
         instrumentQuantity = Integer.parseInt(mQuantitytEditText.getText().toString());
         instrumentQuantity = instrumentQuantity + 1;
         mQuantitytEditText.setText(Integer.toString(instrumentQuantity));
     }
 
-    private void actionDecrementButton(View view) {
+    public void actionDecrementButton() {
         instrumentQuantity = Integer.parseInt(mQuantitytEditText.getText().toString());
-        if(instrumentQuantity > 0) {
-        instrumentQuantity = instrumentQuantity - 1;}
+        if (instrumentQuantity > 0) {
+            instrumentQuantity = instrumentQuantity - 1;
+        }
         mQuantitytEditText.setText(Integer.toString(instrumentQuantity));
     }
 
 
-    //get user input from the editor and save this data in db
-    private void saveInstrument() { //insertInstrument()
+    //Get user input from the editor and save this data in db.
+    private void saveInstrument() {
 
+        ContentValues values = new ContentValues();
+
+        //Get input values from EditText fields
         String nameString = mNameEditText.getText().toString().trim();
-
         String priceString;
-        try {
-            priceString = mPriceEditText.getText().toString().trim();
-        } catch (NumberFormatException e) {
-            priceString = "";
-        }
-        int priceInt = 0;
-        try {
-            priceInt = Integer.parseInt(priceString);
-        } catch (NumberFormatException e) {
-            priceInt = 0;
+        priceString = mPriceEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(priceString)) {
+            priceString = "0";
         }
 
         String quantityString;
-        try {
-            quantityString = mQuantitytEditText.getText().toString().trim();
-        } catch (NumberFormatException e) {
-            quantityString = "";
+        quantityString = mQuantitytEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(quantityString)) {
+            quantityString = "0";
         }
-
-        int quantityInt = 0;
-        try {
-            quantityInt = Integer.parseInt(quantityString);
-        } catch (NumberFormatException e) {
-            quantityInt = 0;
-        }
-
-        //String quantityString = mQuantitytEditText.getText().toString().trim();
-        //int quantityInt = Integer.parseInt(quantityString);
-
         String countryOfOriginString = mCountryOfOrigintEditText.getText().toString();
         String supplierNameString = mSupllierNameEditText.getText().toString().trim();
         String supplierPhoneString = mSupplierPhoneEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new pet
+        // Check if this is supposed to be a new instrument
         // and check if all the fields in the editor are blank
         if (mCurrentInstrumentUri == null &&
                 TextUtils.isEmpty(nameString) &&
@@ -168,36 +154,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(countryOfOriginString) &&
                 TextUtils.isEmpty(supplierNameString) &&
                 TextUtils.isEmpty(supplierPhoneString)) {
-            // Since no fields were modified, we can return early without creating a new pet.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
+            // No fields were modified return to home screen.
             return;
         }
 
         // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME, nameString);
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE, priceInt);
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY, quantityInt);
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN, countryOfOriginString);
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER, supplierPhoneString);
-
-        int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
+        // and instrument attributes from the editor are the values.
+        boolean flag = true;
+        if (TextUtils.isEmpty(nameString) ||
+                TextUtils.isEmpty(priceString) ||
+                TextUtils.isEmpty(quantityString) ||
+                TextUtils.isEmpty(countryOfOriginString) ||
+                TextUtils.isEmpty(supplierNameString) ||
+                TextUtils.isEmpty(supplierPhoneString)) {
+            Toast.makeText(this, R.string.empty_field_warning, Toast.LENGTH_LONG).show();
+            flag = false;
+        } else {
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME, nameString);
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE, priceString);
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY, quantityString);
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_COUNTRY_OF_ORIGIN, countryOfOriginString);
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
+            values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_SUPPLIER_PHONE_NUMER, supplierPhoneString);
         }
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_PRICE, price);
 
-        int quantity = 0;
-        if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
-        }
-        values.put(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_QUANTITY, quantity);
-
-        if (mCurrentInstrumentUri == null) {
-            // This is a NEW pet, so insert a new pet into the provider,
-            // returning the content URI for the new pet.
+        if (mCurrentInstrumentUri == null & flag) {
             Uri newUri = getContentResolver().insert(InstrumentsContract.MusicalInstrumentsEntry.CONTENT_URI, values);
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
@@ -208,22 +189,34 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_insert_instrument_successful),
                         Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
-            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
-            // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
-            // we want to modify.
-            int rowsAffected = getContentResolver().update(mCurrentInstrumentUri, values, null, null);
-            // Show a toast message depending on whether or not the update was successful.
-            if (rowsAffected == 0) {
-                // If no rows were affected, then there was an error with the update.
-                Toast.makeText(this, getString(R.string.editor_update_instrument_failed),
-                        Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(nameString) ||
+                    TextUtils.isEmpty(priceString) ||
+                    TextUtils.isEmpty(quantityString) ||
+                    TextUtils.isEmpty(countryOfOriginString) ||
+                    TextUtils.isEmpty(supplierNameString) ||
+                    TextUtils.isEmpty(supplierPhoneString)) {
+                Toast.makeText(this, R.string.empty_field_warning, Toast.LENGTH_LONG).show();
             } else {
-                // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_instrument_successful),
-                        Toast.LENGTH_SHORT).show();
+                // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
+                // and pass in the new ContentValues. Pass in null for the selection and selection args
+                // because mCurrentPetUri will already identify the correct row in the database that
+                // we want to modify.
+                int rowsAffected = getContentResolver().update(mCurrentInstrumentUri, values, null, null);
+                // Show a toast message depending on whether or not the update was successful.
+                if (rowsAffected == 0) {
+                    // If no rows were affected, then there was an error with the update.
+                    Toast.makeText(this, getString(R.string.editor_update_instrument_failed),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the update was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.editor_update_instrument_successful),
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+
+                }
             }
         }
     }
@@ -238,13 +231,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     /**
-     * This method is called after invalidateOptionsMenu(), so that the
+     * This method is called after invalidateOptionsMenu(),that the
      * menu can be updated (some menu items can be hidden or made visible).
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
+        // If this is a new instrument, hide the "Delete" menu item.
         if (mCurrentInstrumentUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -259,9 +252,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save instrument to db
-                saveInstrument(); //insertinstrument()
-                //Exit activity after inserting and saving data from editor activity
-                finish();
+                saveInstrument();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -271,7 +262,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
                 // Navigate back to parent activity (CatalogActivity)
-                // If the pet hasn't changed, continue with navigating up to parent activity
+                // If the instrument hasn't changed, continue with navigating up to parent activity
                 // which is the {@link CatalogActivity}.
                 if (!mInstrumenttHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
@@ -300,7 +291,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      */
     @Override
     public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
+        // If the instrument hasn't changed, continue with handling back button press
         if (!mInstrumenttHasChanged) {
             super.onBackPressed();
             return;
@@ -326,8 +317,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentInstrumentUri == null) {
             return null;
         }
-        // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
+        // Since the editor shows all instrument attributes, define a projection that contains
+        // all columns from the musical_instruments table
         String[] projection = {
                 InstrumentsContract.MusicalInstrumentsEntry._ID,
                 InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME,
@@ -345,7 +336,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 null);                  // Default sort order
     }
 
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         // Bail early if the cursor is null or there is less than 1 row in the cursor
@@ -353,7 +343,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
         // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of pet attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(InstrumentsContract.MusicalInstrumentsEntry.COLUMN_INSTRUMENT_NAME);
@@ -376,10 +365,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mCountryOfOrigintEditText.setText(countryOfOrigin);
             mSupllierNameEditText.setText(supplierName);
             mSupplierPhoneEditText.setText(supplierPhone);
-
         }
     }
-
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -395,9 +382,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
-     *
-     * @param discardButtonClickListener is the click listener for what to do when
-     *                                   the user confirms they want to discard their changes
      */
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -421,7 +405,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     /**
-     * Prompt the user to confirm that they want to delete this pet.
+     * Prompt the user to confirm that they want to delete this instrument.
      */
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
@@ -449,28 +433,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     /**
-     * Perform the deletion of the pet in the database.
+     * Perform the deletion of the instrument in the database.
      */
     private void deleteInstrument() {
-        // Only perform the delete if this is an existing pet.
+        // Only perform the delete if this is an existing instrument.
         if (mCurrentInstrumentUri != null) {
-            // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
             int rowsDeleted = getContentResolver().delete(mCurrentInstrumentUri, null, null);
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_instrument_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_instrument_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
         // Close the activity
         finish();
+    }
+
+    public void orderMore(View view) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + mSupplierPhoneEditText.getText().toString()));
+        startActivity(intent);
     }
 }
 

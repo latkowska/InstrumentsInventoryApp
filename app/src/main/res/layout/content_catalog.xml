@@ -20,8 +20,7 @@
         android:id="@+id/fab"
         style="@style/FAB"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/note" />
+        android:layout_height="wrap_content" />
 
     <!-- Empty state app-->
     <LinearLayout
@@ -37,6 +36,7 @@
             style="@style/HeaderTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/empty_state_header_margin_bottom"
             android:text="@string/emty_header" />
 
         <!-- Product name field -->
@@ -96,9 +96,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/empty_list"
-            android:layout_weight="6"
+            android:layout_marginTop="@dimen/empty_state_IV"
+            android:layout_weight="5"
             android:scaleType="center"
             android:src="@drawable/instr" />
     </LinearLayout>

@@ -15,42 +15,32 @@
 
         <TextView
             android:id="@+id/list_item_product_name"
+            style="@style/ItemListProductNameStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:padding="5dp"
-            android:text="Product name"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/colorBlue"
-            android:textSize="20sp" />
+            android:text="@string/product_name" />
 
         <TextView
             android:id="@+id/list_item_price"
+            style="@style/ProductPriceAndQuantityStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:padding="5dp"
-            android:text="Price"
-            android:textColor="@color/colorMediumGrey"
-            android:textSize="16sp" />
+            android:text="@string/product_price" />
 
         <TextView
             android:id="@+id/list_item_quantity"
+            style="@style/ProductPriceAndQuantityStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
-            android:padding="5dp"
-            android:text="Quantity"
-            android:textColor="@color/colorMediumGrey"
-            android:textSize="16sp" />
+            android:text="@string/product_quantity" />
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/list_item_sale_button"
+        style="@style/SaleButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:onClick="onClickSale"
-        android:padding="12dp"
-        android:src="@drawable/sale_button" />
+        android:src="@drawable/sale" />
 </RelativeLayout>

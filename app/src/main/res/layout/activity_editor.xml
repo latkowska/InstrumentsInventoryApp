@@ -84,9 +84,9 @@
                     android:id="@+id/increment_quantity"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@color/colorLightBlue"
-                    android:text="+"
-                    android:onClick="actionIncrementButton"/>
+                    android:background="@color/colorLightGrey"
+                    android:onClick="actionIncrementButton"
+                    android:text="+" />
 
                 <!-- Product quantity field -->
                 <EditText
@@ -95,15 +95,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_quantity"
-                    android:inputType="numberSigned"/>
+                    android:inputType="numberSigned" />
 
                 <Button
                     android:id="@+id/decrement_quantity"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@color/colorLightBlue"
-                    android:text="-"
-                    android:onClick="actionDecrementButton"/>
+                    android:background="@color/colorLightGrey"
+                    android:onClick="actionDecrementButton"
+                    android:text="-" />
 
             </LinearLayout>
 
@@ -166,5 +166,6 @@
         style="@style/OrderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="orderMore"
         android:text="@string/orderButton" />
 </LinearLayout>
